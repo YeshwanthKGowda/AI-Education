@@ -1,48 +1,48 @@
 import React, { useState } from "react";
-import { OpenAI } from "openai";
-
-const openai = new OpenAI({
-  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY, // Replace with your OpenAI API key
-});
 
 export default function StudentPage() {
   const [topic, setTopic] = useState("");
   const [subtopics, setSubtopics] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const handleGenerateSubtopics = async () => {
+  const predefinedTopics = {
+    "Artificial Intelligence": [
+      "Basics of Artificial Intelligence",
+      "Machine Learning Overview",
+      "Deep Learning Fundamentals",
+      "Applications of AI in Real Life",
+    ],
+    "Web Development": [
+      "HTML & CSS Basics",
+      "JavaScript Essentials",
+      "Frontend Frameworks (React, Vue)",
+      "Backend Technologies (Node.js, Django)",
+    ],
+    "Data Science": [
+      "Data Analysis Basics",
+      "Statistics and Probability",
+      "Machine Learning Algorithms",
+      "Data Visualization Tools",
+    ],
+  };
+
+  const handleGenerateSubtopics = () => {
     if (!topic) {
       alert("Please enter a topic!");
       return;
     }
 
     setLoading(true);
-    try {
-      const response = await openai.completions.create({
-        model: "text-davinci-003",
-        prompt: `Generate a detailed list of subtopics that a student should learn to master the topic "${topic}".`,
-        max_tokens: 200,
-        temperature: 0.7,
-      });
-
-      if (!response || !response.choices || !response.choices[0]) {
-        throw new Error("Invalid response from OpenAI API.");
-      }
-
-      const subtopicsList = response.choices[0].text
-        .trim()
-        .split("\n")
-        .filter((line) => line);
-
+    setTimeout(() => {
+      const subtopicsList = predefinedTopics[topic] || [
+        `Introduction to ${topic}`,
+        `Key Concepts in ${topic}`,
+        `Applications of ${topic}`,
+        `Advanced Topics in ${topic}`,
+      ];
       setSubtopics(subtopicsList);
-    } catch (error) {
-      console.error("Error generating subtopics:", error);
-      alert(
-        "Failed to generate the subtopics. Please ensure your API key is correct and try again."
-      );
-    } finally {
       setLoading(false);
-    }
+    }, 1000); // Simulate processing delay
   };
 
   return (

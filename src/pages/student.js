@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-import { Configuration, OpenAIApi } from "openai";
+import { OpenAI } from "openai";
 
-const openai = new OpenAIApi(
-  new Configuration({
-    apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY, // Add your API key to `.env.local`
-  })
-);
+const openai = new OpenAI({
+  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY, // Add your API key to `.env.local`
+});
 
 export default function StudentPage() {
   const [topic, setTopic] = useState("");
@@ -22,14 +20,14 @@ export default function StudentPage() {
     setLoading(true);
     try {
       // Use OpenAI to generate subtopics
-      const response = await openai.createCompletion({
+      const response = await openai.completions.create({
         model: "text-davinci-003",
         prompt: `Generate a structured learning roadmap for the topic "${topic}" in ${duration} weeks. Include prerequisites, basics, and advanced concepts.`,
         max_tokens: 200,
         temperature: 0.7,
       });
 
-      const subtopics = response.data.choices[0].text
+      const subtopics = response.choices[0].text
         .trim()
         .split("\n")
         .filter((line) => line); // Split the response into lines and remove empty lines

@@ -46,46 +46,41 @@ export default function StudentPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-600 to-pink-500 p-8 text-white">
-      <h1 className="text-5xl font-extrabold text-center mb-8 drop-shadow-lg">
-        Student Learning Portal
-      </h1>
-      <div className="max-w-lg mx-auto bg-white rounded-lg shadow-lg p-6 text-gray-800">
-        <p className="text-lg mb-4 font-semibold">
-          Enter the topic you’d like to learn:
-        </p>
-        <input
-          type="text"
-          value={topic}
-          onChange={(e) => setTopic(e.target.value)}
-          className="w-full border border-gray-300 rounded-md px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
-          placeholder="e.g., Artificial Intelligence"
-        />
-        <button
-          onClick={handleGenerateSubtopics}
-          className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 px-4 rounded-md font-bold shadow-lg hover:scale-105 transform transition-transform"
-        >
-          {loading ? "Generating..." : "Generate Subtopics"}
-        </button>
-      </div>
-      <div className="mt-12 max-w-2xl mx-auto">
-        <h2 className="text-3xl font-semibold text-center mb-6">
-          Subtopics to Cover
-        </h2>
-        {subtopics.length > 0 ? (
-          <ul className="bg-white rounded-lg shadow-lg p-6 text-gray-800 list-disc list-inside">
-            {subtopics.map((subtopic, index) => (
-              <li key={index} className="mb-2 text-lg">
-                {subtopic}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-center text-white opacity-80">
-            No subtopics generated yet.
-          </p>
+    <div className="min-h-screen bg-[linear-gradient(to_right,#f3f4f6,#e7ebf0)] p-8">
+      <header className="header">
+        <h1>Student Portal</h1>
+      </header>
+      <main className="flex flex-col items-center justify-center mt-8">
+        <div className="card w-full max-w-md">
+          <p className="text-lg font-semibold mb-4">Enter the topic you’d like to learn:</p>
+          <input
+            type="text"
+            value={topic}
+            onChange={(e) => setTopic(e.target.value)}
+            className="input"
+            placeholder="e.g., Artificial Intelligence"
+          />
+          <button
+            onClick={handleGenerateSubtopics}
+            className="button w-full"
+          >
+            {loading ? "Generating..." : "Generate Subtopics"}
+          </button>
+        </div>
+        {subtopics.length > 0 && (
+          <div className="card w-full max-w-2xl mt-8">
+            <h2 className="text-xl font-bold mb-4">Subtopics to Cover</h2>
+            <ul className="list-disc list-inside">
+              {subtopics.map((subtopic, index) => (
+                <li key={index} className="text-gray-800 mb-2">{subtopic}</li>
+              ))}
+            </ul>
+          </div>
         )}
-      </div>
+      </main>
+      <footer className="footer mt-8">
+        <p>&copy; 2025 AI-Education. All rights reserved.</p>
+      </footer>
     </div>
   );
 }

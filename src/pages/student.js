@@ -1,21 +1,18 @@
 import React, { useState } from "react";
 import { OpenAI } from "openai";
 
-// Initialize OpenAI API client
 const openai = new OpenAI({
   apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY, // Replace with your OpenAI API key
 });
 
 export default function StudentPage() {
   const [topic, setTopic] = useState("");
-  const [duration, setDuration] = useState(4); // Default to 4 weeks
-  const [roadmap, setRoadmap] = useState([]);
+  const [subtopics, setSubtopics] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Place your handleGenerateRoadmap function here
-  const handleGenerateRoadmap = async () => {
-    if (!topic || !duration) {
-      alert("Please enter both the topic and duration!");
+  const handleGenerateSubtopics = async () => {
+    if (!topic) {
+      alert("Please enter a topic!");
       return;
     }
 
@@ -23,29 +20,26 @@ export default function StudentPage() {
     try {
       const response = await openai.completions.create({
         model: "text-davinci-003",
-        prompt: `Generate a structured learning roadmap for the topic "${topic}" in ${duration} weeks. Include prerequisites, basics, and advanced concepts.`,
+        prompt: `Generate a detailed list of subtopics that a student should learn to master the topic "${topic}".`,
         max_tokens: 200,
         temperature: 0.7,
       });
 
-      const subtopics = response.choices[0].text
+      if (!response || !response.choices || !response.choices[0]) {
+        throw new Error("Invalid response from OpenAI API.");
+      }
+
+      const subtopicsList = response.choices[0].text
         .trim()
         .split("\n")
         .filter((line) => line);
 
-      const topicsPerWeek = Math.ceil(subtopics.length / duration);
-      const distributedRoadmap = [];
-      for (let i = 0; i < duration; i++) {
-        distributedRoadmap.push({
-          week: `Week ${i + 1}`,
-          topics: subtopics.slice(i * topicsPerWeek, (i + 1) * topicsPerWeek),
-        });
-      }
-
-      setRoadmap(distributedRoadmap);
+      setSubtopics(subtopicsList);
     } catch (error) {
-      console.error("Error generating roadmap:", error);
-      alert("Failed to generate the roadmap. Please try again later.");
+      console.error("Error generating subtopics:", error);
+      alert(
+        "Failed to generate the subtopics. Please ensure your API key is correct and try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -56,7 +50,7 @@ export default function StudentPage() {
       <h1 className="text-5xl font-bold text-center text-purple-700 mb-8">Student Portal</h1>
       <div className="flex flex-col items-center">
         <p className="text-lg mb-4 text-gray-800">
-          Enter the topic you like to learn and the duration in weeks:
+          Enter the topic you’d like to learn:
         </p>
         <input
           type="text"
@@ -65,35 +59,29 @@ export default function StudentPage() {
           className="border border-gray-300 px-4 py-2 rounded-md w-2/3 mb-4 focus:ring focus:ring-purple-300"
           placeholder="e.g., Artificial Intelligence"
         />
-        <input
-          type="number"
-          value={duration}
-          onChange={(e) => setDuration(e.target.value)}
-          className="border border-gray-300 px-4 py-2 rounded-md w-2/3 mb-4 focus:ring focus:ring-purple-300"
-          placeholder="Duration (in weeks)"
-        />
         <button
-          onClick={handleGenerateRoadmap}
+          onClick={handleGenerateSubtopics}
           className="bg-purple-600 text-white px-6 py-2 rounded-md hover:bg-purple-700 transition"
         >
-          {loading ? "Generating..." : "Generate Roadmap"}
+          {loading ? "Generating..." : "Generate Subtopics"}
         </button>
       </div>
       <div className="mt-12">
-        <h2 className="text-3xl font-semibold text-center text-gray-900 mb-6">Learning Roadmap</h2>
-        {roadmap.length > 0 ? (
-          roadmap.map((item, index) => (
-            <div key={index} className="mb-6">
-              <h3 className="text-2xl font-bold text-purple-700">{item.week}</h3>
-              <ul className="list-disc pl-6 mt-2">
-                {item.topics.map((topic, idx) => (
-                  <li key={idx} className="text-gray-700">{topic}</li>
-                ))}
-              </ul>
-            </div>
-          ))
+        <h2 className="text-3xl font-semibold text-center text-gray-900 mb-6">
+          Subtopics to Learn
+        </h2>
+        {subtopics.length > 0 ? (
+          <ul className="list-disc mx-auto w-2/3 text-gray-700">
+            {subtopics.map((subtopic, index) => (
+              <li key={index} className="mb-2">
+                {subtopic}
+              </li>
+            ))}
+          </ul>
         ) : (
-          <p className="text-gray-500 text-center">No roadmap generated yet.</p>
+          <p className="text-gray-500 text-center">
+            No subtopics generated yet.
+          </p>
         )}
       </div>
     </div>

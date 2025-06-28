@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { OpenAI } from "openai";
 
+// Initialize OpenAI API client
 const openai = new OpenAI({
-  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY, // Add your API key to `.env.local`
+  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY, // Replace with your OpenAI API key
 });
 
 export default function StudentPage() {
@@ -11,6 +12,7 @@ export default function StudentPage() {
   const [roadmap, setRoadmap] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  // Place your handleGenerateRoadmap function here
   const handleGenerateRoadmap = async () => {
     if (!topic || !duration) {
       alert("Please enter both the topic and duration!");
@@ -19,7 +21,6 @@ export default function StudentPage() {
 
     setLoading(true);
     try {
-      // Use OpenAI to generate subtopics
       const response = await openai.completions.create({
         model: "text-davinci-003",
         prompt: `Generate a structured learning roadmap for the topic "${topic}" in ${duration} weeks. Include prerequisites, basics, and advanced concepts.`,
@@ -30,9 +31,8 @@ export default function StudentPage() {
       const subtopics = response.choices[0].text
         .trim()
         .split("\n")
-        .filter((line) => line); // Split the response into lines and remove empty lines
+        .filter((line) => line);
 
-      // Distribute subtopics over the specified duration
       const topicsPerWeek = Math.ceil(subtopics.length / duration);
       const distributedRoadmap = [];
       for (let i = 0; i < duration; i++) {
@@ -56,7 +56,7 @@ export default function StudentPage() {
       <h1 className="text-5xl font-bold text-center text-purple-700 mb-8">Student Portal</h1>
       <div className="flex flex-col items-center">
         <p className="text-lg mb-4 text-gray-800">
-          Enter the topic you’d like to learn and the duration in weeks:
+          Enter the topic you like to learn and the duration in weeks:
         </p>
         <input
           type="text"
@@ -81,16 +81,20 @@ export default function StudentPage() {
       </div>
       <div className="mt-12">
         <h2 className="text-3xl font-semibold text-center text-gray-900 mb-6">Learning Roadmap</h2>
-        {roadmap.map((item, index) => (
-          <div key={index} className="mb-6">
-            <h3 className="text-2xl font-bold text-purple-700">{item.week}</h3>
-            <ul className="list-disc pl-6 mt-2">
-              {item.topics.map((topic, idx) => (
-                <li key={idx} className="text-gray-700">{topic}</li>
-              ))}
-            </ul>
-          </div>
-        ))}
+        {roadmap.length > 0 ? (
+          roadmap.map((item, index) => (
+            <div key={index} className="mb-6">
+              <h3 className="text-2xl font-bold text-purple-700">{item.week}</h3>
+              <ul className="list-disc pl-6 mt-2">
+                {item.topics.map((topic, idx) => (
+                  <li key={idx} className="text-gray-700">{topic}</li>
+                ))}
+              </ul>
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-500 text-center">No roadmap generated yet.</p>
+        )}
       </div>
     </div>
   );

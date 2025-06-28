@@ -46,40 +46,42 @@ export default function StudentPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 p-8">
-      <h1 className="text-5xl font-bold text-center text-purple-700 mb-8">Student Portal</h1>
-      <div className="flex flex-col items-center">
-        <p className="text-lg mb-4 text-gray-800">
+    <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-600 to-pink-500 p-8 text-white">
+      <h1 className="text-5xl font-extrabold text-center mb-8 drop-shadow-lg">
+        Student Learning Portal
+      </h1>
+      <div className="max-w-lg mx-auto bg-white rounded-lg shadow-lg p-6 text-gray-800">
+        <p className="text-lg mb-4 font-semibold">
           Enter the topic you’d like to learn:
         </p>
         <input
           type="text"
           value={topic}
           onChange={(e) => setTopic(e.target.value)}
-          className="border border-gray-300 px-4 py-2 rounded-md w-2/3 mb-4 focus:ring focus:ring-purple-300"
+          className="w-full border border-gray-300 rounded-md px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
           placeholder="e.g., Artificial Intelligence"
         />
         <button
           onClick={handleGenerateSubtopics}
-          className="bg-purple-600 text-white px-6 py-2 rounded-md hover:bg-purple-700 transition"
+          className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 px-4 rounded-md font-bold shadow-lg hover:scale-105 transform transition-transform"
         >
           {loading ? "Generating..." : "Generate Subtopics"}
         </button>
       </div>
-      <div className="mt-12">
-        <h2 className="text-3xl font-semibold text-center text-gray-900 mb-6">
-          Subtopics to Learn
+      <div className="mt-12 max-w-2xl mx-auto">
+        <h2 className="text-3xl font-semibold text-center mb-6">
+          Subtopics to Cover
         </h2>
         {subtopics.length > 0 ? (
-          <ul className="list-disc mx-auto w-2/3 text-gray-700">
+          <ul className="bg-white rounded-lg shadow-lg p-6 text-gray-800 list-disc list-inside">
             {subtopics.map((subtopic, index) => (
-              <li key={index} className="mb-2">
+              <li key={index} className="mb-2 text-lg">
                 {subtopic}
               </li>
             ))}
           </ul>
         ) : (
-          <p className="text-gray-500 text-center">
+          <p className="text-center text-white opacity-80">
             No subtopics generated yet.
           </p>
         )}

@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -8,18 +9,18 @@ export default function Home() {
         Personalizing education with the power of AI for students and teachers alike.
       </p>
       <div className="flex flex-col gap-4 sm:flex-row">
-        <a
+        <Link
           href="/student"
-          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 text-center"
         >
           Student Portal
-        </a>
-        <a
+        </Link>
+        <Link
           href="/teacher"
-          className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+          className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 text-center"
         >
           Teacher Dashboard
-        </a>
+        </Link>
       </div>
     </main>
   );
